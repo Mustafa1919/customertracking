@@ -60,8 +60,8 @@ public class CustomerService implements ICustomerService{
 
 	@Override
 	public CustomerResponseDTO findByNameAndLastName(String customerName, String customerLastName) {
-		// TODO Auto-generated method stub
-		return null;
+		return CustomerExtensions.customerToResponse(this.customerRepository.findByNameAndLastName(customerName, customerLastName)
+				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı")));
 	}
 
 }
