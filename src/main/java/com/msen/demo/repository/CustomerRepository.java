@@ -1,4 +1,4 @@
-package com.msen.demo.repositort;
+package com.msen.demo.repository;
 
 import java.util.Optional;
 
@@ -12,7 +12,7 @@ import com.msen.demo.model.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
 	
-	@Query("Select c from Customer WHERE c.name=:name and c.lastName=:lastName")
+	@Query("Select c from Customer c WHERE c.name=:name and c.lastName=:lastName")
 	Optional<Customer> findByNameAndLastName(@Param("name") String customerName,@Param("lastName") String customerLastName);
 
 }

@@ -2,6 +2,7 @@ package com.msen.demo.model;
 
 import java.time.Instant;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table 
+@Table (name = "activity-table")
 @Data
 @Builder
 @Getter
@@ -27,6 +28,7 @@ public class AccountActivity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "account-id")
 	private Long id;
 	@ManyToOne
 	@JoinColumn(name = "id", nullable = false)

@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table 
+@Table(name = "customer-table")
 @Data
 @Builder
 @Getter
@@ -34,7 +34,7 @@ public class Customer {
 	private Instant createDate;
 	private Double balance;
 	private String phoneNumber;
-	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "customerId", fetch = FetchType.LAZY)
 	private Set<AccountActivity> accountActivity;
 
 }

@@ -2,6 +2,8 @@ package com.msen.demo.service.concrete;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.msen.demo.dto.CustomerCreateDTO;
 import com.msen.demo.dto.CustomerResponseDTO;
 import com.msen.demo.dto.CustomerUpdateBalanceDTO;
@@ -9,9 +11,10 @@ import com.msen.demo.exceptions.CustomerBalanceUpdateException;
 import com.msen.demo.exceptions.CustomerNotFoundException;
 import com.msen.demo.extensions.CustomerExtensions;
 import com.msen.demo.model.Customer;
-import com.msen.demo.repositort.CustomerRepository;
+import com.msen.demo.repository.CustomerRepository;
 import com.msen.demo.service.abstracts.ICustomerService;
 
+@Service
 public class CustomerService implements ICustomerService{
 	
 	private final CustomerRepository customerRepository;
@@ -62,6 +65,12 @@ public class CustomerService implements ICustomerService{
 	public CustomerResponseDTO findByNameAndLastName(String customerName, String customerLastName) {
 		return CustomerExtensions.customerToResponse(this.customerRepository.findByNameAndLastName(customerName, customerLastName)
 				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı")));
+	}
+
+	@Override
+	public Customer findByIdCustomer(Long customerId) {
+		return this.customerRepository.findById(customerId)
+				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
 	}
 
 }

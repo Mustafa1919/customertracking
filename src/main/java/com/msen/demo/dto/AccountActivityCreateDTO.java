@@ -2,21 +2,23 @@ package com.msen.demo.dto;
 
 import java.time.Instant;
 
+import com.msen.demo.model.MoneyProcess;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class CustomerCreateDTO extends BaseCustomerDTO{
+@AllArgsConstructor
+public class AccountActivityCreateDTO {
 
-	private Instant dateOfCustomerCreateAccount;
-	private String customerPhoneNumber;
-	private Double customerPrice;
-	
+	private Long customerId;
+	private Instant processDate;
+	private Double price;
+	private MoneyProcess process;
 }
