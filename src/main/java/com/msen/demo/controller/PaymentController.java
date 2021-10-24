@@ -12,8 +12,13 @@ import com.msen.demo.dto.CustomerResponseDTO;
 import com.msen.demo.dto.CustomerUpdateBalanceDTO;
 import com.msen.demo.service.abstracts.IPaymentService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 @RequestMapping("v1/payment")
+@Api(value = "Müşteri Ödeme İşlemleri")
 public class PaymentController {
 
 	private final IPaymentService paymentService;
@@ -24,12 +29,14 @@ public class PaymentController {
 	}
 	
 	@PostMapping("/pay")
-	public ResponseEntity<CustomerResponseDTO> payPrice(@Valid @RequestBody CustomerUpdateBalanceDTO balanceDTO){
+	@ApiOperation(value = "Para Ödeme")
+	public ResponseEntity<CustomerResponseDTO> payPrice(@Valid @RequestBody @ApiParam(value = "Müşteri Güncelleme Nesnesi") CustomerUpdateBalanceDTO balanceDTO){
 		return ResponseEntity.ok(paymentService.payPrice(balanceDTO));
 	}
 	
 	@PostMapping("/oncredit")
-	public ResponseEntity<CustomerResponseDTO> onCreditPrice(@Valid @RequestBody CustomerUpdateBalanceDTO balanceDTO){
+	@ApiOperation(value = "Ürün Alma")
+	public ResponseEntity<CustomerResponseDTO> onCreditPrice(@Valid @RequestBody @ApiParam(value = "Müşteri Güncelleme Nesnesi") CustomerUpdateBalanceDTO balanceDTO){
 		return ResponseEntity.ok(paymentService.onCreditPrice(balanceDTO));
 	}
 	

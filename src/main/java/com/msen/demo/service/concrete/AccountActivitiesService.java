@@ -1,6 +1,5 @@
 package com.msen.demo.service.concrete;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,12 +8,12 @@ import com.msen.demo.dto.AccountActivityCreateDTO;
 import com.msen.demo.dto.AccountActivityResponseDTO;
 import com.msen.demo.exceptions.ActivityNotFound;
 import com.msen.demo.exceptions.CustomerNotFoundException;
+import com.msen.demo.extensions.AccountExtensions;
 import com.msen.demo.model.AccountActivity;
 import com.msen.demo.model.Customer;
 import com.msen.demo.repository.AccountActivityRepository;
 import com.msen.demo.repository.CustomerRepository;
 import com.msen.demo.service.abstracts.IAccountActivitiesService;
-import com.msen.demo.utils.AccountLists;
 
 @Service
 public class AccountActivitiesService implements IAccountActivitiesService{
@@ -50,24 +49,14 @@ public class AccountActivitiesService implements IAccountActivitiesService{
 	}
 
 	@Override
-	public AccountActivityResponseDTO getCustomerActivities(Long customerId) {
+	public List<AccountActivityResponseDTO> getCustomerActivities(Long customerId) {
 		
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
 		
-		List<AccountActivity> activities = this.activityRepository.getCustomerActivities(customer);
-		
-		AccountLists<Double, Instant> listAccountLists = new AccountLists<>();
-		for (AccountActivity accountActivity : activities) {
-			listAccountLists.add(accountActivity.getPrice(), accountActivity.getTimeOfActivity());
-		}
-		
-		return (AccountActivityResponseDTO) AccountActivityResponseDTO.builder()
-				.customerLastName(customer.getLastName())
-				.customerName(customer.getName())
-				.listOfActivities(listAccountLists)
-				.build();
-		
+		return this.activityRepository.getCustomerActivities(customer).stream()
+				.map(activity -> AccountExtensions.accountActivityToAccountResponse(activity)).toList();
+
 	}
 
 

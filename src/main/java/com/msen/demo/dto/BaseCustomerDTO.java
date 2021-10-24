@@ -2,9 +2,19 @@ package com.msen.demo.dto;
 
 import javax.validation.constraints.Min;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Müsteri Base Modeli", description = "Base Model DTO")
 public class BaseCustomerDTO {
+	
+	@ApiModelProperty(value = "Müsteri Adı")
 	private String customerName;
+	
+	@ApiModelProperty(value = "Müsteri Soyadı")
 	private String customerLastName;
+	
+	@ApiModelProperty(value = "Müsteri Borcu")
 	@Min(value = 0, message = "Ücret Sıfırdan Küçük Olamaz")
 	private Double customerTotalBalance;
 	

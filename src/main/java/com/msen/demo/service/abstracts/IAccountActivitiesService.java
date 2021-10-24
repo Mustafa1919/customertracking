@@ -15,7 +15,7 @@ public interface IAccountActivitiesService {
 	void createActivity(AccountActivityCreateDTO createDTO, Customer customer);
 	void delete(Long id);
 	void deleteCustomerAllActivities(Customer customer);
-	AccountActivityResponseDTO getCustomerActivities(Long customerId);
+	List<AccountActivityResponseDTO> getCustomerActivities(Long customerId);
 	List<AccountActivity> getAllActivities();
 	
 }

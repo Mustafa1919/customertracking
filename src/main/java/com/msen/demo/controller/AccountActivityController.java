@@ -12,8 +12,13 @@ import com.msen.demo.dto.AccountActivityResponseDTO;
 import com.msen.demo.model.AccountActivity;
 import com.msen.demo.service.abstracts.IAccountActivitiesService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 @RequestMapping("/v1/account")
+@Api(value = "Müşteri Hesap Detayları")
 public class AccountActivityController {
 
 	private final IAccountActivitiesService service;
@@ -24,11 +29,13 @@ public class AccountActivityController {
 	}
 	
 	@GetMapping("/{customerId}")
-	public ResponseEntity<AccountActivityResponseDTO> getActivities(@PathVariable("customerId") Long customerId){
+	@ApiOperation(value = "Müşteri Hesap Detaylarını Listeler")
+	public ResponseEntity<List<AccountActivityResponseDTO>> getActivities(@PathVariable("customerId") @ApiParam(value = "Müşteri Numarası") Long customerId){
 		return ResponseEntity.ok(service.getCustomerActivities(customerId));
 	}
 	
 	@GetMapping
+	@ApiOperation(hidden = true, value = "")
 	public ResponseEntity<List<AccountActivity>> getActivities(){
 		return ResponseEntity.ok(service.getAllActivities());
 	}

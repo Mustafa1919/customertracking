@@ -1,10 +1,12 @@
 package com.msen.demo.utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountLists <P,D>{
+public class AccountLists <P,D> implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private List<P> listOfPrice;
 	private List<D> listOfDate;
 	

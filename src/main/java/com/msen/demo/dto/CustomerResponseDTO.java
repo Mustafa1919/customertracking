@@ -1,8 +1,12 @@
 package com.msen.demo.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(parent = BaseCustomerDTO.class, value = "Müsteri Response Modeli", description = "Response Model DTO")
 public class CustomerResponseDTO extends BaseCustomerDTO{
 	
+	@ApiModelProperty(value = "Müşteri Numarası")
 	private Long customerId;
 	
 	
