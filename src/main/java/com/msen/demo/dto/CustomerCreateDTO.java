@@ -17,6 +17,5 @@ public class CustomerCreateDTO extends BaseCustomerDTO{
 
 	private Instant dateOfCustomerCreateAccount;
 	private String customerPhoneNumber;
-	private Double customerPrice;
 	
 }

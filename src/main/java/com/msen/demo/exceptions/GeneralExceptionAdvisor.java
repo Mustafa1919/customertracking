@@ -47,10 +47,16 @@ public class GeneralExceptionAdvisor extends ResponseEntityExceptionHandler{
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ExceptionHandler(InvalidMethodException.class)
+	public ResponseEntity<?> invalidMethodException(InvalidMethodException exception){
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> generalExceptionHandler(Exception exception){
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
 	
 
 }

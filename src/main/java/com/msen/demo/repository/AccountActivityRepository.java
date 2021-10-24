@@ -15,4 +15,7 @@ public interface AccountActivityRepository extends JpaRepository<AccountActivity
 	
 	@Query("SELECT c FROM AccountActivity c WHERE c.customerId = :customerId")
 	List<AccountActivity> getCustomerActivities(@Param(value = "customerId") Customer customerId);
+	
+	@Query("DELETE FROM AccountActivity c WHERE c.customerId = :customerId")
+	void deleteCustomerAllActivities(@Param(value = "customerId") Customer customerId);
 }

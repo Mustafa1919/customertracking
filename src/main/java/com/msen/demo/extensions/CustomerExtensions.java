@@ -18,7 +18,7 @@ public class CustomerExtensions {
 	
 	public static Customer customerCreateToCustomer(CustomerCreateDTO createDTO) {
 		return Customer.builder()
-				.balance(createDTO.getCustomerPrice())
+				.balance(createDTO.getCustomerTotalBalance())
 				.createDate(createDTO.getDateOfCustomerCreateAccount())
 				.lastName(createDTO.getCustomerLastName())
 				.name(createDTO.getCustomerName())

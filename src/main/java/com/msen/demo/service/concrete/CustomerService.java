@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 
 import com.msen.demo.dto.CustomerCreateDTO;
 import com.msen.demo.dto.CustomerResponseDTO;
-import com.msen.demo.dto.CustomerUpdateBalanceDTO;
-import com.msen.demo.exceptions.CustomerBalanceUpdateException;
 import com.msen.demo.exceptions.CustomerNotFoundException;
 import com.msen.demo.extensions.CustomerExtensions;
+import com.msen.demo.model.AccountActivity;
 import com.msen.demo.model.Customer;
+import com.msen.demo.model.MoneyProcess;
+import com.msen.demo.repository.AccountActivityRepository;
 import com.msen.demo.repository.CustomerRepository;
 import com.msen.demo.service.abstracts.ICustomerService;
 
@@ -18,9 +19,12 @@ import com.msen.demo.service.abstracts.ICustomerService;
 public class CustomerService implements ICustomerService{
 	
 	private final CustomerRepository customerRepository;
+	private final AccountActivityRepository accountActivityRepository;
 	
-	public CustomerService(CustomerRepository customerRepository) {
+	
+	public CustomerService(CustomerRepository customerRepository, AccountActivityRepository accountActivityRepository) {
 		this.customerRepository = customerRepository;
+		this.accountActivityRepository = accountActivityRepository;
 	}
 
 	@Override
@@ -35,42 +39,34 @@ public class CustomerService implements ICustomerService{
 	}
 
 	@Override
-	public CustomerResponseDTO updateBalance(CustomerUpdateBalanceDTO balanceDTO) {
-		Customer customer = this.customerRepository.findById(balanceDTO.getCustomerId())
-			.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
-		
-		if(customer.getName().equals(balanceDTO.getCustomerName()) &  
-				customer.getLastName().equals(balanceDTO.getCustomerLastName()) )
-			throw new CustomerBalanceUpdateException("Güncelleme Yapılacak Kişi Verileri Hatalı");	
-		
-		return CustomerExtensions.customerToResponse(this.customerRepository.save(customer));
-	}
-
-	@Override
 	public void deleteCustomer(Long id) {
 		Customer customer = this.customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
 		
 		this.customerRepository.delete(customer);
+		this.accountActivityRepository.deleteCustomerAllActivities(customer);
 		
 	}
 
 	@Override
 	public CustomerResponseDTO createCustomer(CustomerCreateDTO customerCreateDTO) {
-		return CustomerExtensions.customerToResponse(this.customerRepository.
-				save(CustomerExtensions.customerCreateToCustomer(customerCreateDTO)));
+		Customer customer = this.customerRepository.
+				save(CustomerExtensions.customerCreateToCustomer(customerCreateDTO));
+		
+		this.accountActivityRepository.save(AccountActivity.builder()
+				.customerId(customer)
+				.price(customerCreateDTO.getCustomerTotalBalance())
+				.process(MoneyProcess.ON_CREDIT)
+				.timeOfActivity(customerCreateDTO.getDateOfCustomerCreateAccount())
+				.build());
+		
+		return CustomerExtensions.customerToResponse(customer);
 	}
 
 	@Override
 	public CustomerResponseDTO findByNameAndLastName(String customerName, String customerLastName) {
 		return CustomerExtensions.customerToResponse(this.customerRepository.findByNameAndLastName(customerName, customerLastName)
 				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı")));
-	}
-
-	@Override
-	public Customer findByIdCustomer(Long customerId) {
-		return this.customerRepository.findById(customerId)
-				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
 	}
 
 }

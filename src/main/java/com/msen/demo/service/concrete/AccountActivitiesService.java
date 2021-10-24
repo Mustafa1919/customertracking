@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import com.msen.demo.dto.AccountActivityCreateDTO;
 import com.msen.demo.dto.AccountActivityResponseDTO;
 import com.msen.demo.exceptions.ActivityNotFound;
+import com.msen.demo.exceptions.CustomerNotFoundException;
 import com.msen.demo.model.AccountActivity;
 import com.msen.demo.model.Customer;
 import com.msen.demo.repository.AccountActivityRepository;
+import com.msen.demo.repository.CustomerRepository;
 import com.msen.demo.service.abstracts.IAccountActivitiesService;
 import com.msen.demo.utils.AccountLists;
 
@@ -18,11 +20,16 @@ import com.msen.demo.utils.AccountLists;
 public class AccountActivitiesService implements IAccountActivitiesService{
 	
 	private final AccountActivityRepository activityRepository;
+	private final CustomerRepository customerRepository;
 	
 
-	public AccountActivitiesService(AccountActivityRepository activityRepository) {
+	public AccountActivitiesService(AccountActivityRepository activityRepository,
+			CustomerRepository customerRepository) {
+		super();
 		this.activityRepository = activityRepository;
+		this.customerRepository = customerRepository;
 	}
+
 
 	@Override
 	public void createActivity(AccountActivityCreateDTO createDTO, Customer customer) {
@@ -43,8 +50,12 @@ public class AccountActivitiesService implements IAccountActivitiesService{
 	}
 
 	@Override
-	public AccountActivityResponseDTO getCustomerActivities(Customer customerId) {
-		List<AccountActivity> activities = this.activityRepository.getCustomerActivities(customerId);
+	public AccountActivityResponseDTO getCustomerActivities(Long customerId) {
+		
+		Customer customer = customerRepository.findById(customerId)
+				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
+		
+		List<AccountActivity> activities = this.activityRepository.getCustomerActivities(customer);
 		
 		AccountLists<Double, Instant> listAccountLists = new AccountLists<>();
 		for (AccountActivity accountActivity : activities) {
@@ -52,11 +63,24 @@ public class AccountActivitiesService implements IAccountActivitiesService{
 		}
 		
 		return (AccountActivityResponseDTO) AccountActivityResponseDTO.builder()
-				.customerLastName(customerId.getLastName())
-				.customerName(customerId.getName())
+				.customerLastName(customer.getLastName())
+				.customerName(customer.getName())
 				.listOfActivities(listAccountLists)
 				.build();
 		
+	}
+
+
+	@Override
+	public void deleteCustomerAllActivities(Customer customer) {
+		this.activityRepository.delete(null);
+		
+	}
+
+
+	@Override
+	public List<AccountActivity> getAllActivities() {
+		return this.activityRepository.findAll();
 	}
 
 }

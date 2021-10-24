@@ -11,24 +11,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table (name = "activity-table")
-@Data
+@Table
 @Builder
 @Getter
 @Setter
 @EqualsAndHashCode
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountActivity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "account-id")
+	@Column(name = "account_id")
 	private Long id;
 	@ManyToOne
 	@JoinColumn(name = "id", nullable = false)
