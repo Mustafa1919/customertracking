@@ -20,13 +20,14 @@ public class AccountActivitiesService implements IAccountActivitiesService{
 	
 	private final AccountActivityRepository activityRepository;
 	private final CustomerRepository customerRepository;
-	
+	private final AccountExtensions accountExtensions;
 
 	public AccountActivitiesService(AccountActivityRepository activityRepository,
-			CustomerRepository customerRepository) {
+			CustomerRepository customerRepository, AccountExtensions accountExtensions) {
 		super();
 		this.activityRepository = activityRepository;
 		this.customerRepository = customerRepository;
+		this.accountExtensions = accountExtensions;
 	}
 
 
@@ -54,15 +55,16 @@ public class AccountActivitiesService implements IAccountActivitiesService{
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı"));
 		
-		return this.activityRepository.getCustomerActivities(customer).stream()
-				.map(activity -> AccountExtensions.accountActivityToAccountResponse(activity)).toList();
+		return this.accountExtensions.accountActivityListToResponseList(
+				this.activityRepository.getCustomerActivities(customer));
+		
 
 	}
 
 
 	@Override
 	public void deleteCustomerAllActivities(Customer customer) {
-		this.activityRepository.delete(null);
+		this.activityRepository.deleteCustomerAllActivities(customer);
 		
 	}
 

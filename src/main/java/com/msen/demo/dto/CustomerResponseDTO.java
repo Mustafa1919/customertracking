@@ -13,6 +13,15 @@ public class CustomerResponseDTO extends BaseCustomerDTO{
 	
 	public CustomerResponseDTO() {	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		CustomerResponseDTO tmpDTO = (CustomerResponseDTO) obj;
+		return (this.getCustomerId().equals(tmpDTO.getCustomerId())
+				&& this.getCustomerLastName().equals(tmpDTO.getCustomerLastName())
+				&& this.getCustomerName().equals(tmpDTO.getCustomerName())
+				&& this.getCustomerTotalBalance() == tmpDTO.getCustomerTotalBalance());
+	}
+	
 	
 	public CustomerResponseDTO(String customerName, String customerLastName, Double customerTotalBalance,
 			Long customerId) {

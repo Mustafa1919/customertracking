@@ -17,7 +17,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @ApiModel(parent = BaseCustomerDTO.class, value = "Müşteri Nesnesi", description = "Create Model DTO")
 public class CustomerCreateDTO extends BaseCustomerDTO{
-
+	
+	public CustomerCreateDTO(String customerName, String customerLastName, Double customerTotalBalance,
+			Instant dateOfCustomerCreateAccount, String customerPhoneNumber) {
+		super(customerName, customerLastName, customerTotalBalance);
+		this.dateOfCustomerCreateAccount = dateOfCustomerCreateAccount;
+		this.customerPhoneNumber = customerPhoneNumber;
+	}
 	@ApiModelProperty(value = "Hesap İşlem Tarihi")
 	private Instant dateOfCustomerCreateAccount;
 	@ApiModelProperty(value = "Müşteri Telefon Numarası")

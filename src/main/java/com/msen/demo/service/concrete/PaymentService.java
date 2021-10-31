@@ -21,10 +21,13 @@ public class PaymentService implements IPaymentService{
 	
 	private final CustomerRepository customerRepository;
 	private final AccountActivityRepository accountActivityRepository;
+	private final CustomerExtensions customerExtensions;
 
-	public PaymentService(CustomerRepository customerRepository, AccountActivityRepository accountActivityRepository) {
+	public PaymentService(CustomerRepository customerRepository, AccountActivityRepository accountActivityRepository
+			,CustomerExtensions customerExtensions) {
 		this.customerRepository = customerRepository;
 		this.accountActivityRepository = accountActivityRepository;
+		this.customerExtensions = customerExtensions;
 	}
 
 	@Override
@@ -36,9 +39,9 @@ public class PaymentService implements IPaymentService{
 		
 		customer.setBalance(customer.getBalance() - balanceDTO.getCustomerTotalBalance());
 		
-		updateCustomerAndSaveActivities(customer, balanceDTO);
+//		updateCustomerAndSaveActivities(customer, balanceDTO);
 		
-		return CustomerExtensions.customerToResponse(this.customerRepository.save(customer));
+		return customerExtensions.customerToResponse(updateCustomerAndSaveActivities(customer, balanceDTO));
 	}
 
 	@Override
@@ -49,10 +52,10 @@ public class PaymentService implements IPaymentService{
 		
 		customer.setBalance(customer.getBalance() + balanceDTO.getCustomerTotalBalance());
 		
-		updateCustomerAndSaveActivities(customer, balanceDTO);
+//		updateCustomerAndSaveActivities(customer, balanceDTO);
 		
 		
-		return CustomerExtensions.customerToResponse(this.customerRepository.save(customer));
+		return customerExtensions.customerToResponse(updateCustomerAndSaveActivities(customer, balanceDTO));
 	}
 	
 	
@@ -82,6 +85,7 @@ public class PaymentService implements IPaymentService{
 	
 	
 	private Customer updateCustomerAndSaveActivities(Customer customer, CustomerUpdateBalanceDTO balanceDTO) {
+		
 		this.accountActivityRepository.save(AccountActivity.builder()
 				.customerId(customer)
 				.price(balanceDTO.getCustomerTotalBalance())

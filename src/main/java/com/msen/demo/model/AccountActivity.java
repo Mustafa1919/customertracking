@@ -17,7 +17,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +25,6 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,5 +47,15 @@ public class AccountActivity {
 	private Double price;
 	@ApiModelProperty(hidden = true)
 	private MoneyProcess process;
+	
+	@Override
+	public boolean equals(Object obj) {
+		AccountActivity tmpObj = (AccountActivity) obj;
+		if(this.customerId.equals(tmpObj.getCustomerId())
+				&& this.price.equals(tmpObj.getPrice())
+				&& this.process.equals(tmpObj.getProcess()))
+			return true;
+		else return false;
+	}
 
 }

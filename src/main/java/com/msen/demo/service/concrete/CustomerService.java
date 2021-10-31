@@ -20,22 +20,25 @@ public class CustomerService implements ICustomerService{
 	
 	private final CustomerRepository customerRepository;
 	private final AccountActivityRepository accountActivityRepository;
+	private final CustomerExtensions customerExtensions;
 	
 	
-	public CustomerService(CustomerRepository customerRepository, AccountActivityRepository accountActivityRepository) {
+	public CustomerService(CustomerRepository customerRepository, AccountActivityRepository accountActivityRepository
+			,CustomerExtensions customerExtensions) {
 		this.customerRepository = customerRepository;
 		this.accountActivityRepository = accountActivityRepository;
+		this.customerExtensions = customerExtensions;
 	}
 
 	@Override
 	public CustomerResponseDTO findById(Long customerId) {
-		return CustomerExtensions.customerToResponse(this.customerRepository.findById(customerId).
+		return customerExtensions.customerToResponse(this.customerRepository.findById(customerId).
 				orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı")));
 	}
 
 	@Override
 	public List<CustomerResponseDTO> findAll() {
-		return customerRepository.findAll().stream().map(customer -> CustomerExtensions.customerToResponse(customer)).toList();
+		return customerExtensions.customerToResponseList(customerRepository.findAll()); //.stream().map(customer -> customerExtensions.customerToResponse(customer)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -51,7 +54,7 @@ public class CustomerService implements ICustomerService{
 	@Override
 	public CustomerResponseDTO createCustomer(CustomerCreateDTO customerCreateDTO) {
 		Customer customer = this.customerRepository.
-				save(CustomerExtensions.customerCreateToCustomer(customerCreateDTO));
+				save(customerExtensions.customerCreateToCustomer(customerCreateDTO));
 		
 		this.accountActivityRepository.save(AccountActivity.builder()
 				.customerId(customer)
@@ -60,12 +63,12 @@ public class CustomerService implements ICustomerService{
 				.timeOfActivity(customerCreateDTO.getDateOfCustomerCreateAccount())
 				.build());
 		
-		return CustomerExtensions.customerToResponse(customer);
+		return customerExtensions.customerToResponse(customer);
 	}
 
 	@Override
 	public CustomerResponseDTO findByNameAndLastName(String customerName, String customerLastName) {
-		return CustomerExtensions.customerToResponse(this.customerRepository.findByNameAndLastName(customerName, customerLastName)
+		return customerExtensions.customerToResponse(this.customerRepository.findByNameAndLastName(customerName, customerLastName)
 				.orElseThrow(() -> new CustomerNotFoundException("Müşteri Bulunamadı")));
 	}
 
